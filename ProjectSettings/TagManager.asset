@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Obstical
   - Dead
+  - Coins
   layers:
   - Default
   - TransparentFX

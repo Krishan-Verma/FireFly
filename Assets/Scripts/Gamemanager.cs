@@ -7,27 +7,38 @@ using TMPro;
 public class Gamemanager : MonoBehaviour
 {
     private float velocity = 100f;
-    private const int delay = 300;
+    private const int delay = 1000;
     public GameObject [] Obsticals;
+    public GameObject[] extras;
     [System.NonSerialized]
     public float speed= -200;
     public GameObject SpawnPos;
+    public GameObject GamePanel;
     public GameObject EndPanel;
     public static Gamemanager Instance;
     public TMP_Text score;
-    public TMP_Text Yourscore;
-    public TMP_Text scoreboard;
-    public TMP_Text scorepoint;
+    public TMP_Text finalScore;
+    public TMP_Text coinCountText;
+    public TMP_Text finalCoinCountText;
     public AudioSource audioSource;
-    public AudioClip gameover;
+    public AudioClip gameOverClip;
+    public AudioClip scoreClip;
+   
+    public AudioClip highScoreClip;
+
     public GameObject Coins;
+   // public GameObject Coin;
     public GameObject[] lives;
     public GameObject newlive;
     public TMP_Text godModeText;
-    public int live=3;
+    public int live;
     public bool GodMode = false;
-    int heartbeat = 2;
+    public float spawnTime=5f;
+    public int coinCount = 0;
+    int heartbeat = 6;
     int count = 0;
+   
+    
 
     public int scoreCount = 0;
     private void Awake()
@@ -39,20 +50,34 @@ public class Gamemanager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    // Start is called before the first frame update
+   
     void Start()
     {
         
-       InvokeRepeating("GenerateObstical",1,5);
-        Music();
+       InvokeRepeating(nameof(GenerateObstical), 1,spawnTime);
+       InvokeRepeating(nameof(GenerateExtras), 0, 2f);
+       Music();
         
     }
 
     void GenerateObstical()
     {
-       Instantiate(Obsticals[0], new Vector3(Random.Range(Screen.width/1.5f, Screen.width), Random.Range(Screen.height / 5f,Screen.height/3f), 0f), Quaternion.identity,SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f); 
-       Instantiate(Obsticals[1], new Vector3(Random.Range(Screen.width/1.5f, Screen.width), Random.Range(Screen.height / 1.6f, Screen.height / 1.3f), 0f), Obsticals[1].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
-       Instantiate(Coins, new Vector3(Random.Range(Screen.width/2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform);
+        int randIndex = Random.Range(0, Obsticals.Length);
+        float obsHeight = (randIndex < 3) ? Screen.height / 6f : Screen.height/1.5f;
+        Instantiate(Coins, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform);
+        Instantiate(Obsticals[randIndex], new Vector3(Screen.width, obsHeight, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+       
+        //Instantiate(Obsticals[0], new Vector3(Random.Range(Screen.width/1.5f, Screen.width), Random.Range(Screen.height / 5f,Screen.height/3f), 0f), Quaternion.identity,SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f); 
+        // Instantiate(Obsticals[1], new Vector3(Random.Range(Screen.width/1.5f, Screen.width), Random.Range(Screen.height / 1.6f, Screen.height / 1.3f), 0f), Obsticals[1].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+        // Instantiate(obstical2, new Vector3(Random.Range(Screen.width / 2f, Screen.width), Screen.height /1.5f, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+
+    }
+
+    void GenerateExtras()
+    {
+       int randIndex = Random.Range(0, extras.Length);
+       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 6f, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+     
     }
 
     public void Restart()
@@ -61,6 +86,7 @@ public class Gamemanager : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
         EndPanel.SetActive(false);
+        GamePanel.SetActive(true);
         scoreCount = 0;
     }
 
@@ -68,6 +94,7 @@ public class Gamemanager : MonoBehaviour
     {
         Time.timeScale = 1;
         EndPanel.SetActive(false);
+        GamePanel.SetActive(true);
         SceneManager.LoadScene(0);
              
     }
@@ -75,25 +102,36 @@ public class Gamemanager : MonoBehaviour
     public void EndGame()
     {
         Time.timeScale = 0;
-        Yourscore.text = score.text;
+        finalScore.text = score.text;
+        
         HighScore();
-        scoreboard.enabled= false;
-        scorepoint.enabled = false;
+        UpdateFinalScore();
+        
+        GamePanel.SetActive(false);
         EndPanel.SetActive(true);
+
         GameObject[] obsticals = GameObject.FindGameObjectsWithTag("Obstical");
         foreach(GameObject obstical in obsticals)
         Destroy(obstical);
+
+        GameObject[] coins = GameObject.FindGameObjectsWithTag("Coins");
+        foreach (GameObject coin in coins)
+        Destroy(coin);
     }
 
     private void Update()
     {
         
-     score.text = (scoreCount).ToString();
+     score.text = scoreCount.ToString();
+     coinCountText.text = coinCount.ToString();
+
     }
 
     private void FixedUpdate()
     {
-        
+        scoreCount += 1;
+      
+
         if(scoreCount% delay == 0 && scoreCount/ delay > count)
         {
             count++;
@@ -117,9 +155,10 @@ public class Gamemanager : MonoBehaviour
 
     public void HighScore()
     {
-        if (int.Parse(Yourscore.text)>int.Parse(PlayerPrefs.GetString("HighScore", "0")))
+        if (int.Parse(finalScore.text)>int.Parse(PlayerPrefs.GetString("HighScore", "0")))
         {
-            PlayerPrefs.SetString("HighScore", Yourscore.text);
+            PlayerPrefs.SetString("HighScore", finalScore.text);
+            audioSource.PlayOneShot(highScoreClip);
         }
     }
 
@@ -130,7 +169,7 @@ public class Gamemanager : MonoBehaviour
         {
             godModeText.gameObject.SetActive(true);
             Invoke("ChangeMode",1f);
-            heartbeat = 2;
+            heartbeat = 6;
         }
     }
 
@@ -146,6 +185,32 @@ public class Gamemanager : MonoBehaviour
 
 
         godModeText.gameObject.SetActive(false);
+    }
+
+    void UpdateFinalScore()
+    {
+        
+        audioSource.PlayOneShot(scoreClip);
+        StartCoroutine(UpdateScore(coinCount, finalCoinCountText));
+        StartCoroutine(UpdateScore(scoreCount, finalScore));
+       
+             
+    }
+
+    IEnumerator UpdateScore(int value,TMP_Text text)
+    {
+        int i = (value>200)?value-200:0;
+        while(i<value)
+        {
+            text.text= i.ToString();
+            yield return null;
+            i++;
+            //GameObject coin = Instantiate(Coin, SpawnPos.transform);
+            //coin.GetComponent<Rigidbody2D>().gravityScale = 2f;
+            //coin.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 20f);
+
+        }
+        
     }
 }
 
