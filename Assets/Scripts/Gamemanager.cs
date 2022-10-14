@@ -25,9 +25,8 @@ public class Gamemanager : MonoBehaviour
     public AudioClip scoreClip;
    
     public AudioClip highScoreClip;
-
+    public GameObject highScoreText;
     public GameObject Coins;
-   // public GameObject Coin;
     public GameObject[] lives;
     public GameObject newlive;
     public TMP_Text godModeText;
@@ -43,6 +42,7 @@ public class Gamemanager : MonoBehaviour
     public int scoreCount = 0;
     private void Awake()
     {
+      
         speed *= (Screen.width / Screen.height);
         velocity = speed;
         scoreCount = 0;
@@ -54,9 +54,10 @@ public class Gamemanager : MonoBehaviour
     void Start()
     {
         
-       InvokeRepeating(nameof(GenerateObstical), 1,spawnTime);
-       InvokeRepeating(nameof(GenerateExtras), 0, 2f);
-       Music();
+       InvokeRepeating(nameof(GenerateObstical), 1f,spawnTime);
+       InvokeRepeating(nameof(GenerateExtras), 0f, 2f);
+       InvokeRepeating(nameof(GenerateNewLife), 50f, 50f);
+        Music();
         
     }
 
@@ -67,10 +68,6 @@ public class Gamemanager : MonoBehaviour
         Instantiate(Coins, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform);
         Instantiate(Obsticals[randIndex], new Vector3(Screen.width, obsHeight, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
        
-        //Instantiate(Obsticals[0], new Vector3(Random.Range(Screen.width/1.5f, Screen.width), Random.Range(Screen.height / 5f,Screen.height/3f), 0f), Quaternion.identity,SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f); 
-        // Instantiate(Obsticals[1], new Vector3(Random.Range(Screen.width/1.5f, Screen.width), Random.Range(Screen.height / 1.6f, Screen.height / 1.3f), 0f), Obsticals[1].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
-        // Instantiate(obstical2, new Vector3(Random.Range(Screen.width / 2f, Screen.width), Screen.height /1.5f, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
-
     }
 
     void GenerateExtras()
@@ -80,10 +77,14 @@ public class Gamemanager : MonoBehaviour
      
     }
 
+    void GenerateNewLife()
+    {
+        Instantiate(newlive, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+
+    }
+
     public void Restart()
     {
-        //audioSource.Play();
-        Time.timeScale = 1;
         SceneManager.LoadScene(1);
         EndPanel.SetActive(false);
         GamePanel.SetActive(true);
@@ -92,7 +93,7 @@ public class Gamemanager : MonoBehaviour
 
     public void Menu()
     {
-        Time.timeScale = 1;
+      
         EndPanel.SetActive(false);
         GamePanel.SetActive(true);
         SceneManager.LoadScene(0);
@@ -101,11 +102,12 @@ public class Gamemanager : MonoBehaviour
 
     public void EndGame()
     {
-        Time.timeScale = 0;
+       
+        CancelInvoke();
         finalScore.text = score.text;
         
-        HighScore();
         UpdateFinalScore();
+        Invoke("HighScore",4f);
         
         GamePanel.SetActive(false);
         EndPanel.SetActive(true);
@@ -136,7 +138,6 @@ public class Gamemanager : MonoBehaviour
         {
             count++;
             speed += velocity;
-            Instantiate(newlive, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity= new Vector2(speed*0.5f, 0f);
         }
     }
 
@@ -159,9 +160,11 @@ public class Gamemanager : MonoBehaviour
         {
             PlayerPrefs.SetString("HighScore", finalScore.text);
             audioSource.PlayOneShot(highScoreClip);
+            highScoreText.SetActive(true);
         }
     }
 
+    
     public void EnterGodMode()
     {
         heartbeat--;
@@ -205,10 +208,7 @@ public class Gamemanager : MonoBehaviour
             text.text= i.ToString();
             yield return null;
             i++;
-            //GameObject coin = Instantiate(Coin, SpawnPos.transform);
-            //coin.GetComponent<Rigidbody2D>().gravityScale = 2f;
-            //coin.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 20f);
-
+            
         }
         
     }
