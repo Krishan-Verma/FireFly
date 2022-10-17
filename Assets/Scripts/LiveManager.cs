@@ -11,13 +11,13 @@ public class LiveManager : MonoBehaviour
     {
         if(collision.gameObject.tag=="Player")
         {
-            if (Gamemanager.Instance.live <3)
+            if (GameManager.Instance.live <3)
             {
-                Gamemanager.Instance.lives[Gamemanager.Instance.live].SetActive(true);
-                Gamemanager.Instance.live += 1;
+                GameManager.Instance.lives[GameManager.Instance.live].SetActive(true);
+                GameManager.Instance.live += 1;
             }
 
-            Gamemanager.Instance.audioSource.PlayOneShot(liveGain);
+            GameManager.Instance.audioSource.PlayOneShot(liveGain);
             Destroy(gameObject);
         }
     }

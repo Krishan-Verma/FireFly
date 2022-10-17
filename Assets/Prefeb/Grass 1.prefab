@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 4129047392651742832}
   - component: {fileID: -4595208098215540425}
   - component: {fileID: 4798542970482142487}
-  - component: {fileID: 408790792845003904}
-  m_Layer: 5
+  - component: {fileID: 6477072456098222050}
+  m_Layer: 0
   m_Name: Grass 1
   m_TagString: Obstical
   m_Icon: {fileID: 0}
@@ -195,8 +195,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!58 &408790792845003904
-CircleCollider2D:
+--- !u!61 &6477072456098222050
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -208,6 +208,16 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.9753418, y: 93.351685}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 50
+  m_Size: {x: 148.77054, y: 111.55949}
+  m_EdgeRadius: 0

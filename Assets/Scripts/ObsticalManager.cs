@@ -23,9 +23,11 @@ public class ObsticalManager : MonoBehaviour
         player.tag = "Dead";
         player.animator.SetBool("IsDead", true);
         player.audioSource.Stop();
+        player.GetComponent<Rigidbody2D>().gravityScale = 10f;
         player.enabled = false;
-        Gamemanager.Instance.audioSource.Stop();
-        Gamemanager.Instance.audioSource.PlayOneShot(Gamemanager.Instance.gameOverClip);
+       
+        GameManager.Instance.audioSource.Stop();
+        GameManager.Instance.audioSource.PlayOneShot(GameManager.Instance.gameOverClip);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -33,7 +35,7 @@ public class ObsticalManager : MonoBehaviour
         if(collision.gameObject.tag=="Player" && !Invisible(collision.gameObject.GetComponent<PlayerManager>()))
         {
             
-            if (Gamemanager.Instance.live > 0)
+            if (GameManager.Instance.live > 0)
             {
                 
                 DecreaseLive(collision.gameObject.GetComponent<RectTransform>());
@@ -43,7 +45,7 @@ public class ObsticalManager : MonoBehaviour
             else
             {
                 DisablePlayer(collision.gameObject.GetComponent<PlayerManager>());
-                StartCoroutine(LoadEndGame(3f));
+                StartCoroutine(LoadEndGame(3f, collision.gameObject.GetComponent<PlayerManager>()));
             }
            
         }
@@ -55,7 +57,7 @@ public class ObsticalManager : MonoBehaviour
         if (collision.gameObject.tag == "Player" && !Invisible(collision.gameObject.GetComponent<PlayerManager>()))
         {
 
-            if (Gamemanager.Instance.live > 0)
+            if (GameManager.Instance.live > 0)
             {
 
                 DecreaseLive(collision.gameObject.GetComponent<RectTransform>());
@@ -65,7 +67,7 @@ public class ObsticalManager : MonoBehaviour
             else
             {
                 DisablePlayer(collision.gameObject.GetComponent<PlayerManager>());
-                StartCoroutine(LoadEndGame(3f));
+                StartCoroutine(LoadEndGame(3f, collision.gameObject.GetComponent<PlayerManager>()));
             }
 
         }
@@ -73,10 +75,11 @@ public class ObsticalManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+       
         if(collision.gameObject.tag=="Player" &&!Invisible(collision.gameObject.GetComponent<PlayerManager>()))
         {
            
-            if (Gamemanager.Instance.live >0)
+            if (GameManager.Instance.live >0)
             {
                 
                 DecreaseLive(collision.gameObject.GetComponent<RectTransform>());
@@ -86,32 +89,33 @@ public class ObsticalManager : MonoBehaviour
             else
             {
                 DisablePlayer(collision.gameObject.GetComponent<PlayerManager>());
-                StartCoroutine(LoadEndGame(3f));
+                StartCoroutine(LoadEndGame(3f, collision.gameObject.GetComponent<PlayerManager>()));
             }
         }
     }
 
     
-    IEnumerator LoadEndGame(float second)
+    IEnumerator LoadEndGame(float second,PlayerManager player)
     {
         yield return new WaitForSeconds(second);
-        Gamemanager.Instance.EndGame();
+        player.gameObject.SetActive(false);
+        GameManager.Instance.EndGame();
     }
 
    void DecreaseLive(RectTransform playerPosition)
     {
        
-        if (!Gamemanager.Instance.GodMode)
+        if (!GameManager.Instance.GodMode)
         {
-            Gamemanager.Instance.live -= 1;
+            GameManager.Instance.live -= 1;
             audioSource.PlayOneShot(hitsound);
-            Gamemanager.Instance.lives[Gamemanager.Instance.live].SetActive(false);
+            GameManager.Instance.lives[GameManager.Instance.live].SetActive(false);
             
         }
         else
         {
-            Gamemanager.Instance.speed -= 100f;
-            Gamemanager.Instance.spawnTime = (Gamemanager.Instance.spawnTime > 1) ? Gamemanager.Instance.spawnTime - 1f : 1f;
+            GameManager.Instance.speed -= 100f;
+            GameManager.Instance.ObsticalSpawnTime = (GameManager.Instance.ObsticalSpawnTime > 1) ? GameManager.Instance.ObsticalSpawnTime - 1f : 1f;
         }
         
         playerPosition.position = new Vector3(playerPosition.position.x, Screen.height / 2f,0f);

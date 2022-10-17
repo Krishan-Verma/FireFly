@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4595208098215540425}
   - component: {fileID: 4798542970482142487}
   - component: {fileID: 2731472363040152895}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Cloud 1
   m_TagString: Obstical
   m_Icon: {fileID: 0}

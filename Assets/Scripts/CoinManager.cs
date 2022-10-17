@@ -13,7 +13,7 @@ public class CoinManager : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        GetComponent<Rigidbody2D>().velocity = new Vector2(Gamemanager.Instance.speed, 0f); 
+        GetComponent<Rigidbody2D>().velocity = new Vector2(GameManager.Instance.speed, 0f); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -21,7 +21,7 @@ public class CoinManager : MonoBehaviour
         if(collision.gameObject.tag=="Player")
         {
             audioSource.PlayOneShot(coinSound);
-            Gamemanager.Instance.coinCount ++;
+            GameManager.Instance.coinCount ++;
             Destroy(gameObject,0.4f);
         }
     }

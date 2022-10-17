@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8939798232378651292}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Coins
   m_TagString: Coins
   m_Icon: {fileID: 0}

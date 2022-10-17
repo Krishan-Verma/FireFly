@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 4129047392651742832}
   - component: {fileID: -4595208098215540425}
   - component: {fileID: 4798542970482142487}
-  - component: {fileID: 2876848973779557720}
-  m_Layer: 5
+  - component: {fileID: 4599431908151667927}
+  m_Layer: 0
   m_Name: flower 4
   m_TagString: Obstical
   m_Icon: {fileID: 0}
@@ -195,8 +195,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!58 &2876848973779557720
-CircleCollider2D:
+--- !u!61 &4599431908151667927
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -208,6 +208,16 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 50.02523}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 50
+  m_Size: {x: 100, y: 97.367096}
+  m_EdgeRadius: 0

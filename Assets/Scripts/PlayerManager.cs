@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,12 +24,16 @@ public class PlayerManager : MonoBehaviour
     {
        
         playerAction.Player.Enable();
-         playerAction.Player.Jump.performed += Jump;
+        playerAction.Player.Jump.performed += Jump;
+        playerAction.Player.Exit.performed += Exit;
     }
 
+  
+    
     private void OnDisable()
     {
         playerAction.Player.Jump.performed -= Jump;
+        playerAction.Player.Exit.performed -= Exit;
         playerAction.Player.Disable();
     }
     private void Start()
@@ -47,11 +52,15 @@ public class PlayerManager : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext obj)
     {
-       
+       if(Time.timeScale!=0)
         rb.AddForce(new Vector2(0f, Upforce*jumprefactor),ForceMode2D.Impulse);
         
     }
 
+    public void Exit(InputAction.CallbackContext obj)
+    {
+        GameManager.Instance.Pause();  
+    }
     public void PlaneSound()
     {
         

@@ -3,58 +3,72 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.Audio;
 
-public class Gamemanager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    private float velocity = 100f;
-    private const int delay = 1000;
-    public GameObject [] Obsticals;
-    public GameObject[] extras;
-    [System.NonSerialized]
-    public float speed= -200;
+    public static GameManager Instance;
+
+    public GameObject []Obsticals;
+    public GameObject []extras;
+    public GameObject []lives;
+    public GameObject newlive;
     public GameObject SpawnPos;
     public GameObject GamePanel;
+    public GameObject PausePanel;
     public GameObject EndPanel;
-    public static Gamemanager Instance;
+    public GameObject highScoreText;
+    public GameObject Coins;
+    
+
     public TMP_Text score;
     public TMP_Text finalScore;
     public TMP_Text coinCountText;
     public TMP_Text finalCoinCountText;
+    public TMP_Text godModeText;
+
+
     public AudioSource audioSource;
+    public AudioMixer audioMixer;
     public AudioClip gameOverClip;
     public AudioClip scoreClip;
-   
     public AudioClip highScoreClip;
-    public GameObject highScoreText;
-    public GameObject Coins;
-    public GameObject[] lives;
-    public GameObject newlive;
-    public TMP_Text godModeText;
-    public int live;
-    public bool GodMode = false;
-    public float spawnTime=5f;
-    public int coinCount = 0;
+
+    public Button soundBtn;
+    public Sprite soundSprite;
+    public Sprite offSound;
+
     int heartbeat = 6;
     int count = 0;
-   
-    
+    float velocity;
+    const int delay = 500;
 
+    public int live;
     public int scoreCount = 0;
+    public int coinCount = 0;
+
+    public float speed = -200;
+    public float ObsticalSpawnTime=5f;
+    public bool GodMode = false;
+
+
     private void Awake()
     {
       
         speed *= (Screen.width / Screen.height);
-        velocity = speed;
+        velocity = speed/3;
         scoreCount = 0;
         Instance = this;
         audioSource = GetComponent<AudioSource>();
+       
     }
 
    
     void Start()
     {
         
-       InvokeRepeating(nameof(GenerateObstical), 1f,spawnTime);
+       InvokeRepeating(nameof(GenerateObstical), 1f, ObsticalSpawnTime);
        InvokeRepeating(nameof(GenerateExtras), 0f, 2f);
        InvokeRepeating(nameof(GenerateNewLife), 50f, 50f);
         Music();
@@ -73,7 +87,7 @@ public class Gamemanager : MonoBehaviour
     void GenerateExtras()
     {
        int randIndex = Random.Range(0, extras.Length);
-       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 6f, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 8f, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
      
     }
 
@@ -85,19 +99,34 @@ public class Gamemanager : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(1);
+        Time.timeScale = 1f;
         EndPanel.SetActive(false);
         GamePanel.SetActive(true);
         scoreCount = 0;
+        audioMixer.SetFloat("MasterVolume", 10f);
+        SceneManager.LoadScene(1);
     }
 
     public void Menu()
     {
-      
+        Time.timeScale = 1f;
         EndPanel.SetActive(false);
         GamePanel.SetActive(true);
+        audioMixer.SetFloat("MasterVolume", 10f);
         SceneManager.LoadScene(0);
              
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0f;
+        PausePanel.SetActive(true);
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1f;
+        PausePanel.SetActive(false);
     }
 
     public void EndGame()
@@ -148,7 +177,7 @@ public class Gamemanager : MonoBehaviour
         {
             audioSource.Play();
         }
-        else
+        else 
         {
             audioSource.Stop();
         }
@@ -211,6 +240,24 @@ public class Gamemanager : MonoBehaviour
             
         }
         
+    }
+
+    
+    public void Sounds()
+    {
+       audioMixer.GetFloat("MasterVolume", out float vol);
+       if(vol==10f)
+        {
+            audioMixer.SetFloat("MasterVolume", -80f);
+            soundBtn.image.sprite = offSound;
+
+        }
+       else
+        {
+            soundBtn.image.sprite = soundSprite;
+            audioMixer.SetFloat("MasterVolume", 10f);
+        }
+
     }
 }
 
