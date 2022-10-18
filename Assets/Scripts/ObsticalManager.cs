@@ -118,7 +118,7 @@ public class ObsticalManager : MonoBehaviour
             GameManager.Instance.ObsticalSpawnTime = (GameManager.Instance.ObsticalSpawnTime > 1) ? GameManager.Instance.ObsticalSpawnTime - 1f : 1f;
         }
         
-        playerPosition.position = new Vector3(playerPosition.position.x, Screen.height / 2f,0f);
+        playerPosition.position = new Vector3(playerPosition.position.x,Screen.height/ 2f,0f);
                 
     }
 
