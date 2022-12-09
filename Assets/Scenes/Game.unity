@@ -1247,6 +1247,7 @@ MonoBehaviour:
   - {fileID: 4129047392651742838, guid: a286883d3bfd5e548a4dfe8296b6f14d, type: 3}
   - {fileID: 4129047392651742838, guid: fe34695cce924bc4f8f18a464518c5c6, type: 3}
   - {fileID: 4129047392651742838, guid: f9a71e6dd83404246a59467e8b6b87f8, type: 3}
+  - {fileID: 4129047392651742838, guid: d4602b965c4e47544a0847490fbfe8b5, type: 3}
   - {fileID: 4129047392651742838, guid: 19675613f23e72f47802b45844e4c6c5, type: 3}
   - {fileID: 4129047392651742838, guid: 39eaa759e858bd14e908d6c9f041371e, type: 3}
   - {fileID: 4129047392651742838, guid: 63e5ef424702bd7499c8ffbd334657fd, type: 3}
@@ -1275,7 +1276,7 @@ MonoBehaviour:
   highScoreClip: {fileID: 8300000, guid: eeb2ad2b1c7378a4eb76e1775352c7a5, type: 3}
   soundBtn: {fileID: 105894808}
   soundSprite: {fileID: -2354599989249271683, guid: 9fb826f3ca5c937439ca036782864fa1, type: 3}
-  offSound: {fileID: -8864459858760515969, guid: 9fb826f3ca5c937439ca036782864fa1, type: 3}
+  offSound: {fileID: 7273794711903156749, guid: 9fb826f3ca5c937439ca036782864fa1, type: 3}
   live: 3
   scoreCount: 0
   coinCount: 0
@@ -2661,7 +2662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3edb38156ad80c546bb81faa8dd8cb60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 1005626839}
   hitsound: {fileID: 8300000, guid: 38c34687a676e4a419d43108aca3893c, type: 3}
 --- !u!82 &1005626839
 AudioSource:
