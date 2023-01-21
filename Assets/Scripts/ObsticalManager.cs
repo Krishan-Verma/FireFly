@@ -25,7 +25,8 @@ public class ObsticalManager : MonoBehaviour
         player.audioSource.Stop();
         player.GetComponent<Rigidbody2D>().gravityScale = 10f;
         player.enabled = false;
-       
+
+        GameManager.Instance.IsDead = true;
         GameManager.Instance.audioSource.Stop();
         GameManager.Instance.audioSource.PlayOneShot(GameManager.Instance.gameOverClip);
     }

@@ -10,20 +10,46 @@ public class MenuManager : MonoBehaviour
     public Button Sound;
     public Button BGMusic;
     public Button MusicBtn;
+    public Button []PlayerOptions;
     public Sprite SoundSprite;
     public Sprite BGMusicSprite;
+    public Sprite SelectedSprite;
+    public Sprite UnSelectedSprite;
     public Sprite OffSound;
+
     public static MenuManager Instance;
     public TMP_Text highScore;
+    public TMP_Text TotalCoins;
+    public TMP_Text AvilabeCoins;
+    private int CoinCheat = 0;
 
     private void Awake()
     {
+        
+  
         Instance = this;
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
         UpdateSprite();
-        highScore.text = PlayerPrefs.GetString("HighScore", "0");
+        highScore.text = PlayerPrefs.GetString("HighScore", "000000");
+        TotalCoins.text = PlayerPrefs.GetString("Coins", "000000");
+        AvilabeCoins.text = TotalCoins.text;
+        PlayerPrefs.SetString("Button" + 0, "Active");
+        
 
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < PlayerOptions.Length; i++)
+        {
+            if (PlayerPrefs.GetString("Button" + i, "Lock") == "Active")
+            {
+                PlayerOptions[i].image.sprite = UnSelectedSprite;
+            }
+        }
+
+        PlayerOptions[PlayerPrefs.GetInt("PlayerNo", 0)].image.sprite = SelectedSprite;
     }
 
     public void Play()
@@ -116,5 +142,82 @@ public class MenuManager : MonoBehaviour
     {
         Application.Quit();
 
+    }
+
+    public void SelectPlayer(int i)
+    {
+        if (PlayerPrefs.GetString("Button" + i,"Lock")=="Active")
+        {
+            MakeSelection(i);
+        }
+        else
+        {
+            if (MakePayment(i))
+            {
+                MakeSelection(i);
+
+                PlayerPrefs.SetString("Button" + i, "Active");
+            }
+        }
+    }
+
+    private void MakeSelection(int i)
+    {
+        foreach (Button Player in PlayerOptions)
+        {
+            if (Player.image.sprite.name == SelectedSprite.name)
+            {
+                Player.image.sprite = UnSelectedSprite;
+
+            }
+        }
+
+        PlayerOptions[i].image.sprite = SelectedSprite;
+        PlayerPrefs.SetInt("PlayerNo", i);
+    }
+
+
+    private bool MakePayment(int playerIndex)
+    {
+        int price=0;
+        int coins = int.Parse(PlayerPrefs.GetString("Coins", "0"));
+
+        switch (playerIndex)
+        {
+            case 0: price = 0; break;
+
+            case 1: price = 100000; break;
+
+            case 2: price = 300000; break;
+
+            case 3: price = 500000; break;
+
+            case 4: price = 1000000;
+                    if (CoinCheat == 7)
+                         PlayerPrefs.SetString("Coins", "1000000");
+                    else
+                        CoinCheat++;
+                    break;
+
+            default: price = 0; break;
+
+        }
+
+        if(coins>=price)
+        {
+            coins -= price;
+            PlayerPrefs.SetString("Coins", coins.ToString());
+            TotalCoins.text = coins.ToString();
+            AvilabeCoins.text= coins.ToString();
+
+            return true; 
+
+        }
+        else
+        {
+            Debug.Log("Need More Coins!");
+            return false;
+        }
+               
     }
 }

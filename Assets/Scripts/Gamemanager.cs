@@ -20,12 +20,13 @@ public class GameManager : MonoBehaviour
     public GameObject EndPanel;
     public GameObject highScoreText;
     public GameObject Coins;
+    public GameObject []Players;
     
 
     public TMP_Text score;
     public TMP_Text finalScore;
     public TMP_Text coinCountText;
-    public TMP_Text finalCoinCountText;
+    public TMP_Text finalCoinCount;
     public TMP_Text godModeText;
 
 
@@ -44,35 +45,60 @@ public class GameManager : MonoBehaviour
     float velocity;
     const int delay = 500;
 
+
     public int live;
     public int scoreCount = 0;
     public int coinCount = 0;
 
+
     public float speed = -200;
     public float ObsticalSpawnTime=5f;
     public bool GodMode = false;
-
+    public bool IsDead = false;
+    
 
     private void Awake()
     {
-      
+        Instantiate(Players[PlayerPrefs.GetInt("PlayerNo", 0)], transform.parent, false);
         speed *= (Screen.width / Screen.height);
         velocity = speed/3;
         scoreCount = 0;
         Instance = this;
         audioSource = GetComponent<AudioSource>();
+        
        
     }
 
-   
+
     void Start()
     {
         
        InvokeRepeating(nameof(GenerateObstical), 1f, ObsticalSpawnTime);
        InvokeRepeating(nameof(GenerateExtras), 0f, 2f);
        InvokeRepeating(nameof(GenerateNewLife), 50f, 50f);
-        Music();
+       Music();
         
+    }
+
+    private void Update()
+    {
+
+        score.text = scoreCount.ToString();
+        coinCountText.text = coinCount.ToString();
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (!IsDead)
+            scoreCount += 1;
+
+
+        if (scoreCount % delay == 0 && scoreCount / delay > count)
+        {
+            count++;
+            speed += velocity;
+        }
     }
 
     void GenerateObstical()
@@ -133,8 +159,7 @@ public class GameManager : MonoBehaviour
     {
        
         CancelInvoke();
-        finalScore.text = score.text;
-        
+        UpdateCoins();
         UpdateFinalScore();
         Invoke("HighScore",4f);
         
@@ -150,25 +175,7 @@ public class GameManager : MonoBehaviour
         Destroy(coin);
     }
 
-    private void Update()
-    {
-        
-     score.text = scoreCount.ToString();
-     coinCountText.text = coinCount.ToString();
-
-    }
-
-    private void FixedUpdate()
-    {
-        scoreCount += 1;
-      
-
-        if(scoreCount% delay == 0 && scoreCount/ delay > count)
-        {
-            count++;
-            speed += velocity;
-        }
-    }
+   
 
     public void Music()
     {
@@ -187,12 +194,19 @@ public class GameManager : MonoBehaviour
     {
         if (int.Parse(finalScore.text)>int.Parse(PlayerPrefs.GetString("HighScore", "0")))
         {
-            PlayerPrefs.SetString("HighScore", finalScore.text);
+            PlayerPrefs.SetString("HighScore", string.Format("{0:D6}",scoreCount));
             audioSource.PlayOneShot(highScoreClip);
             highScoreText.SetActive(true);
         }
     }
 
+    public void UpdateCoins()
+    {
+        int coinsTotal = int.Parse(PlayerPrefs.GetString("Coins", "0"))+coinCount;
+        
+        PlayerPrefs.SetString("Coins",string.Format("{0:D6}", coinsTotal));
+      
+    }
     
     public void EnterGodMode()
     {
@@ -223,7 +237,7 @@ public class GameManager : MonoBehaviour
     {
         
         audioSource.PlayOneShot(scoreClip);
-        StartCoroutine(UpdateScore(coinCount, finalCoinCountText));
+        StartCoroutine(UpdateScore(coinCount, finalCoinCount));
         StartCoroutine(UpdateScore(scoreCount, finalScore));
        
              
@@ -232,7 +246,7 @@ public class GameManager : MonoBehaviour
     IEnumerator UpdateScore(int value,TMP_Text text)
     {
         int i = (value>200)?value-200:0;
-        while(i<value)
+        while(i<=value)
         {
             text.text= i.ToString();
             yield return null;
