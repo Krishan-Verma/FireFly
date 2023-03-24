@@ -11,6 +11,8 @@ public class MenuManager : MonoBehaviour
     public Button BGMusic;
     public Button MusicBtn;
     public Button []PlayerOptions;
+    public GameObject CoinPanel;
+   
     public Sprite SoundSprite;
     public Sprite BGMusicSprite;
     public Sprite SelectedSprite;
@@ -21,18 +23,18 @@ public class MenuManager : MonoBehaviour
     public TMP_Text highScore;
     public TMP_Text TotalCoins;
     public TMP_Text AvilabeCoins;
-    private int CoinCheat = 0;
+    private int CoinCheat;
 
     private void Awake()
     {
-        
-  
+        //PlayerPrefs.DeleteAll();
         Instance = this;
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
         UpdateSprite();
         highScore.text = PlayerPrefs.GetString("HighScore", "000000");
         TotalCoins.text = PlayerPrefs.GetString("Coins", "000000");
+        CoinCheat = PlayerPrefs.GetInt("Cheat", 0);
         AvilabeCoins.text = TotalCoins.text;
         PlayerPrefs.SetString("Button" + 0, "Active");
         
@@ -193,10 +195,14 @@ public class MenuManager : MonoBehaviour
             case 3: price = 500000; break;
 
             case 4: price = 1000000;
-                    if (CoinCheat == 7)
-                         PlayerPrefs.SetString("Coins", "1000000");
-                    else
-                        CoinCheat++;
+                if (CoinCheat == 7)
+                {
+                    CoinCheat++;
+                    PlayerPrefs.SetString("Coins", "1000000");
+                    PlayerPrefs.SetInt("Cheat", CoinCheat);
+                }
+                else
+                    CoinCheat++;
                     break;
 
             default: price = 0; break;
@@ -215,7 +221,7 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Need More Coins!");
+            CoinPanel.SetActive(true);
             return false;
         }
                

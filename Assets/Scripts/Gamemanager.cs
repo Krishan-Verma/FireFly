@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Instantiate(Players[PlayerPrefs.GetInt("PlayerNo", 0)], transform.parent, false);
+        Instantiate(Players[PlayerPrefs.GetInt("PlayerNo", 0)], SpawnPos.transform, false);
         speed *= (Screen.width / Screen.height);
         velocity = speed/3;
         scoreCount = 0;
