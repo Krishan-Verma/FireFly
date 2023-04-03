@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,16 +7,19 @@ public class ObsticalManager : MonoBehaviour
 {
     public AudioSource audioSource;
     public AudioClip hitsound;
-    float lastInvisibleTime;
-    float invisiblityTime;
     
+    public static ObsticalManager Instance;
+    int minimumLive = 1;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        invisiblityTime = 2f;
+        Instance = this;
+        
 
     }
+
+  
 
     void DisablePlayer(PlayerManager player)
     {
@@ -33,10 +37,10 @@ public class ObsticalManager : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         
-        if(collision.gameObject.tag=="Player" && !Invisible(collision.gameObject.GetComponent<PlayerManager>()))
+        if(collision.gameObject.tag=="Player" && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()))
         {
-            
-            if (GameManager.Instance.live > 0)
+           
+            if (GameManager.Instance.live > minimumLive)
             {
                 
                 DecreaseLive(collision.gameObject.GetComponent<RectTransform>());
@@ -45,8 +49,8 @@ public class ObsticalManager : MonoBehaviour
             }
             else
             {
-                DisablePlayer(collision.gameObject.GetComponent<PlayerManager>());
-                StartCoroutine(LoadEndGame(3f, collision.gameObject.GetComponent<PlayerManager>()));
+                GameManager.Instance.ShowAdPanel(collision.gameObject.GetComponent<PlayerManager>());
+                
             }
            
         }
@@ -55,10 +59,12 @@ public class ObsticalManager : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
 
-        if (collision.gameObject.tag == "Player" && !Invisible(collision.gameObject.GetComponent<PlayerManager>()))
+        if (collision.gameObject.tag == "Player" && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()))
         {
+           
 
-            if (GameManager.Instance.live > 0)
+
+            if (GameManager.Instance.live > minimumLive)
             {
 
                 DecreaseLive(collision.gameObject.GetComponent<RectTransform>());
@@ -67,8 +73,9 @@ public class ObsticalManager : MonoBehaviour
             }
             else
             {
-                DisablePlayer(collision.gameObject.GetComponent<PlayerManager>());
-                StartCoroutine(LoadEndGame(3f, collision.gameObject.GetComponent<PlayerManager>()));
+                GameManager.Instance.ShowAdPanel(collision.gameObject.GetComponent<PlayerManager>());
+
+
             }
 
         }
@@ -77,22 +84,25 @@ public class ObsticalManager : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
        
-        if(collision.gameObject.tag=="Player" &&!Invisible(collision.gameObject.GetComponent<PlayerManager>()))
+        if(collision.gameObject.tag=="Player" &&!GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()))
         {
            
-            if (GameManager.Instance.live >0)
+
+            if (GameManager.Instance.live > minimumLive)
             {
-                
+
+
+
                 DecreaseLive(collision.gameObject.GetComponent<RectTransform>());
-               
-                
+
+
             }
             else
             {
-                DisablePlayer(collision.gameObject.GetComponent<PlayerManager>());
-                StartCoroutine(LoadEndGame(3f, collision.gameObject.GetComponent<PlayerManager>()));
+                GameManager.Instance.ShowAdPanel(collision.gameObject.GetComponent<PlayerManager>());
+
             }
-        }
+        } 
     }
 
     
@@ -123,19 +133,13 @@ public class ObsticalManager : MonoBehaviour
                 
     }
 
-   bool Invisible(PlayerManager player)
-   {
-        if(lastInvisibleTime+invisiblityTime<Time.time)
+    public void End(PlayerManager player)
+    {
+        if (player != null)
         {
-            lastInvisibleTime = Time.time;
-            player.animator.SetTrigger("IsInvisible");
-            return false;
+            DisablePlayer(player);
+            StartCoroutine(LoadEndGame(3f, player));
         }
-        else
-        {
-            
-            return true;
-        }
-        
-   }
+    }
+
 }

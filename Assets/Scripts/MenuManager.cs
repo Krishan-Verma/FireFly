@@ -11,7 +11,8 @@ public class MenuManager : MonoBehaviour
     public Button BGMusic;
     public Button MusicBtn;
     public Button []PlayerOptions;
-    public GameObject CoinPanel;
+    public GameObject AdPanel;
+    public GameObject RewardPanel;
    
     public Sprite SoundSprite;
     public Sprite BGMusicSprite;
@@ -38,6 +39,18 @@ public class MenuManager : MonoBehaviour
         AvilabeCoins.text = TotalCoins.text;
         PlayerPrefs.SetString("Button" + 0, "Active");
         
+
+    }
+
+    private void OnEnable()
+    {
+        IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
+
+    }
+
+    private void OnDisable()
+    {
+        IronSourceRewardedVideoEvents.onAdRewardedEvent -= RewardedVideoOnAdRewardedEvent;
 
     }
 
@@ -221,9 +234,22 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            CoinPanel.SetActive(true);
+            AdPanel.SetActive(true);
             return false;
         }
                
     }
+
+    void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
+    {
+
+        int rewardCoins = 1000;
+        int coinsTotal = int.Parse(PlayerPrefs.GetString("Coins", "0")) + rewardCoins;
+
+        PlayerPrefs.SetString("Coins", string.Format("{0:D6}", coinsTotal));
+        TotalCoins.text = coinsTotal.ToString();
+        AvilabeCoins.text = coinsTotal.ToString();
+        RewardPanel.SetActive(true);
+    }
+
 }

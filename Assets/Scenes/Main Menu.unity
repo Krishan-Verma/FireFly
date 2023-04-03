@@ -618,7 +618,8 @@ MonoBehaviour:
   - {fileID: 519904245}
   - {fileID: 1687881923}
   - {fileID: 1164270466}
-  CoinPanel: {fileID: 1160247272}
+  AdPanel: {fileID: 1160247272}
+  RewardPanel: {fileID: 818200896}
   SoundSprite: {fileID: 3749690277163349949, guid: 9fb826f3ca5c937439ca036782864fa1, type: 3}
   BGMusicSprite: {fileID: 9078254476743739761, guid: 9fb826f3ca5c937439ca036782864fa1, type: 3}
   SelectedSprite: {fileID: -3019668284918160759, guid: 9fb826f3ca5c937439ca036782864fa1, type: 3}
@@ -5265,8 +5266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a535d19981aaa74297fb03de7ed19cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RewardPanel: {fileID: 818200896}
+  AdPanel: {fileID: 1160247272}
   NoAdPanel: {fileID: 674114335}
+  isAdCompleted: 0
 --- !u!1 &1080373807
 GameObject:
   m_ObjectHideFlags: 0
@@ -5842,7 +5844,7 @@ GameObject:
   - component: {fileID: 1160247275}
   - component: {fileID: 1160247274}
   m_Layer: 5
-  m_Name: CoinPanel
+  m_Name: AdPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10908,7 +10910,7 @@ GameObject:
   - component: {fileID: 9050755920095796096}
   - component: {fileID: 6640308146411829758}
   m_Layer: 5
-  m_Name: AddCoins
+  m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

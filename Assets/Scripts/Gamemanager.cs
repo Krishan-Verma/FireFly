@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject SpawnPos;
     public GameObject GamePanel;
     public GameObject PausePanel;
+    public GameObject AdPanel;
     public GameObject EndPanel;
     public GameObject highScoreText;
     public GameObject Coins;
@@ -40,15 +41,19 @@ public class GameManager : MonoBehaviour
     public Sprite soundSprite;
     public Sprite offSound;
 
+    public PlayerManager player;
+
     int heartbeat = 6;
     int count = 0;
     float velocity;
     const int delay = 500;
-
+    float lastInvisibleTime;
+    float invisiblityTime;
 
     public int live;
     public int scoreCount = 0;
     public int coinCount = 0;
+
 
 
     public float speed = -200;
@@ -65,10 +70,25 @@ public class GameManager : MonoBehaviour
         scoreCount = 0;
         Instance = this;
         audioSource = GetComponent<AudioSource>();
-        
-       
+        invisiblityTime = 3f;
+
+
     }
 
+    private void OnEnable()
+    {
+        IronSourceRewardedVideoEvents.onAdRewardedEvent += PlayerRevive;
+        
+
+    }
+
+  
+
+    private void OnDisable()
+    {
+        IronSourceRewardedVideoEvents.onAdRewardedEvent -= PlayerRevive;
+        
+    }
 
     void Start()
     {
@@ -175,7 +195,13 @@ public class GameManager : MonoBehaviour
         Destroy(coin);
     }
 
-   
+    public void ShowAdPanel(PlayerManager player)
+    {
+        Time.timeScale = 0f;
+        AdPanel.SetActive(true);
+        this.player = player;
+        
+    }
 
     public void Music()
     {
@@ -270,6 +296,48 @@ public class GameManager : MonoBehaviour
         {
             soundBtn.image.sprite = soundSprite;
             audioMixer.SetFloat("MasterVolume", 10f);
+        }
+
+    }
+
+    private void PlayerRevive(IronSourcePlacement arg1, IronSourceAdInfo arg2)
+    {
+        Invisible(player);
+        player.transform.position = new Vector3(player.transform.position.x, Screen.height / 2f, 0f);
+        Time.timeScale = 1;
+       
+    }
+
+
+    private void RewardedVideoOnAdShowFailedEvent(IronSourceError arg1, IronSourceAdInfo arg2)
+    {
+        ObsticalManager.Instance.End(player);
+    }
+
+    private void RewardedVideoOnAdUnavailable()
+    {
+        ObsticalManager.Instance.End(player);
+
+    }
+
+    public void CallEnd()
+    {
+        ObsticalManager.Instance.End(player);
+    }
+
+    public bool Invisible(PlayerManager player)
+    {
+
+        if (lastInvisibleTime + invisiblityTime < Time.time)
+        {
+            lastInvisibleTime = Time.time;
+            player.animator.SetTrigger("IsInvisible");
+            return false;
+        }
+        else
+        {
+
+            return true;
         }
 
     }
