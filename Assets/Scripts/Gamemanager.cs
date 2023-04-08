@@ -13,8 +13,10 @@ public class GameManager : MonoBehaviour
     public GameObject []Obsticals;
     public GameObject []extras;
     public GameObject []lives;
+    public GameObject [] Enemies;
     public GameObject newlive;
     public GameObject SpawnPos;
+    public GameObject SpawnPosFront;
     public GameObject GamePanel;
     public GameObject PausePanel;
     public GameObject AdPanel;
@@ -53,20 +55,21 @@ public class GameManager : MonoBehaviour
     public int live;
     public int scoreCount = 0;
     public int coinCount = 0;
-
+    int index = 0;
 
 
     public float speed = -200;
-    public float ObsticalSpawnTime=5f;
+    public float ObsticalSpawnTime=4f;
     public bool GodMode = false;
     public bool IsDead = false;
-    
+    private bool Spawning=true;
 
     private void Awake()
     {
+        
         Instantiate(Players[PlayerPrefs.GetInt("PlayerNo", 0)], SpawnPos.transform, false);
         speed *= (Screen.width / Screen.height);
-        velocity = speed/3;
+        velocity = speed/10;
         scoreCount = 0;
         Instance = this;
         audioSource = GetComponent<AudioSource>();
@@ -92,12 +95,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
-       InvokeRepeating(nameof(GenerateObstical), 1f, ObsticalSpawnTime);
-       InvokeRepeating(nameof(GenerateExtras), 0f, 2f);
-       InvokeRepeating(nameof(GenerateNewLife), 50f, 50f);
-       Music();
-        
+        Music();
+
+        StartCoroutine(Spawner(nameof(GenerateObstical), 1f, ObsticalSpawnTime));
+        StartCoroutine(Spawner(nameof(GenerateEnemies), 100f, 200f));
+        StartCoroutine(Spawner(nameof(GenerateCoins), 1f, 3f));
+        StartCoroutine(Spawner(nameof(GenerateExtras), 0f, 1f));
+        StartCoroutine(Spawner(nameof(GenerateNewLife), 50f, 50f)); 
+
+
     }
 
     private void Update()
@@ -118,22 +124,35 @@ public class GameManager : MonoBehaviour
         {
             count++;
             speed += velocity;
+            ObsticalSpawnTime -= 0.001f;
         }
     }
 
     void GenerateObstical()
     {
         int randIndex = Random.Range(0, Obsticals.Length);
-        float obsHeight = (randIndex < 3) ? Screen.height / 6f : Screen.height/1.5f;
-        Instantiate(Coins, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform);
-        Instantiate(Obsticals[randIndex], new Vector3(Screen.width, obsHeight, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+        float obsHeight = (randIndex < 9) ? Screen.height / 6f : Screen.height/1.5f;
+        Instantiate(Obsticals[randIndex], new Vector3(Screen.width, obsHeight, 0f), Obsticals[randIndex].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
        
     }
+    void GenerateEnemies()
+    {
+        float obsHeight = Screen.height / 1.5f;
+        Instantiate(Enemies[index], new Vector3(Screen.width, obsHeight, 0f), Enemies[index].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+        index++;
+
+        if (index % Enemies.Length == 0)
+        {
+            index = 0;
+        }
+    }
+
+
 
     void GenerateExtras()
     {
        int randIndex = Random.Range(0, extras.Length);
-       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 8f, 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 8f, 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
      
     }
 
@@ -143,6 +162,11 @@ public class GameManager : MonoBehaviour
 
     }
 
+    void GenerateCoins()
+    {
+        Instantiate(Coins, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform);
+
+    }
     public void Restart()
     {
         Time.timeScale = 1f;
@@ -177,11 +201,10 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-       
-        CancelInvoke();
+        StopSpawning();
         UpdateCoins();
         UpdateFinalScore();
-        Invoke("HighScore",4f);
+        Invoke(nameof(HighScore), 4f);
         
         GamePanel.SetActive(false);
         EndPanel.SetActive(true);
@@ -193,6 +216,10 @@ public class GameManager : MonoBehaviour
         GameObject[] coins = GameObject.FindGameObjectsWithTag("Coins");
         foreach (GameObject coin in coins)
         Destroy(coin);
+
+        Destroy(GameObject.FindGameObjectWithTag("Live"));
+
+
     }
 
     public void ShowAdPanel(PlayerManager player)
@@ -271,7 +298,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator UpdateScore(int value,TMP_Text text)
     {
-        int i = (value>200)?value-200:0;
+        int i = (value>125)?value-125:0;
         while(i<=value)
         {
             text.text= i.ToString();
@@ -339,7 +366,25 @@ public class GameManager : MonoBehaviour
 
             return true;
         }
+       
+    }
 
+    IEnumerator Spawner(string methodName, float startTime, float repeatTime)
+    {
+        yield return new WaitForSeconds(startTime);
+
+        while (Spawning == true)
+        { 
+            SendMessage(methodName);
+            repeatTime -= 0.002f;
+            yield return new WaitForSeconds(repeatTime);
+        }
+    }
+
+    void StopSpawning()
+    {
+        Spawning = false;
+        StopAllCoroutines();
     }
 }
 
