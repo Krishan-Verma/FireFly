@@ -890,6 +890,7 @@ IL2CPP_EXTERN_C String_t* _stringLiteral7DE03E5EBA0308517D1762F2C0DF3B9E2A2F1870
 IL2CPP_EXTERN_C String_t* _stringLiteral7F85A2723BB62FEF95DD6F8C5F0FF606EA62246A;
 IL2CPP_EXTERN_C String_t* _stringLiteral7FE78C3B1F25A676AC22D36E01B5CF5CC7DC8ED1;
 IL2CPP_EXTERN_C String_t* _stringLiteral85EA23745BAB27C1CF9C76837E55332314BA92E0;
+IL2CPP_EXTERN_C String_t* _stringLiteral85F80FAAA415BD1B83857D4D496807832BC453B3;
 IL2CPP_EXTERN_C String_t* _stringLiteral876C4B39B6E4D0187090400768899C71D99DE90D;
 IL2CPP_EXTERN_C String_t* _stringLiteral88BEE283254D7094E258B3A88730F4CC4F1E4AC7;
 IL2CPP_EXTERN_C String_t* _stringLiteral8ACAA4E0B28437F5FD1A41CE6591A16813F05377;
@@ -907,7 +908,6 @@ IL2CPP_EXTERN_C String_t* _stringLiteralA1D2689CA4567A71A95A70DC44047A0E7570BE5C
 IL2CPP_EXTERN_C String_t* _stringLiteralA294DAD207C32424675CE40B7B7673FBE9C295B3;
 IL2CPP_EXTERN_C String_t* _stringLiteralA3DFC0C77ACADE0EE48DCC73E795A597D0270A73;
 IL2CPP_EXTERN_C String_t* _stringLiteralA6107EE62A5874EF8D2DEAC7D3C0A9F07B89E096;
-IL2CPP_EXTERN_C String_t* _stringLiteralA82D62EE8075FBAE46CC278680965FF1AB1AE0D5;
 IL2CPP_EXTERN_C String_t* _stringLiteralA87D266F5AAE1AF5998468D25833A8C6AD50D4FD;
 IL2CPP_EXTERN_C String_t* _stringLiteralAB3448E21FA53C63C06270903A13B17D02935BE0;
 IL2CPP_EXTERN_C String_t* _stringLiteralAB8C010282BE48F0F50823C8B75055C568893F98;
@@ -17658,7 +17658,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CUpdateScoreU3Ed__67_MoveNext_mCF64CA6
 		int32_t L_2 = V_0;
 		if ((((int32_t)L_2) == ((int32_t)1)))
 		{
-			goto IL_0061;
+			goto IL_005b;
 		}
 	}
 	{
@@ -17668,36 +17668,36 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CUpdateScoreU3Ed__67_MoveNext_mCF64CA6
 IL_0010:
 	{
 		__this->___U3CU3E1__state_0 = (-1);
-		// int i = (value>150)?value-150:0;
+		// int i = (value>125)?value-125:0;
 		int32_t L_3 = __this->___value_2;
 		G_B4_0 = __this;
-		if ((((int32_t)L_3) > ((int32_t)((int32_t)150))))
+		if ((((int32_t)L_3) > ((int32_t)((int32_t)125))))
 		{
 			G_B5_0 = __this;
-			goto IL_0028;
+			goto IL_0025;
 		}
 	}
 	{
 		G_B6_0 = 0;
 		G_B6_1 = G_B4_0;
-		goto IL_0034;
+		goto IL_002e;
 	}
 
-IL_0028:
+IL_0025:
 	{
 		int32_t L_4 = __this->___value_2;
-		G_B6_0 = ((int32_t)il2cpp_codegen_subtract(L_4, ((int32_t)150)));
+		G_B6_0 = ((int32_t)il2cpp_codegen_subtract(L_4, ((int32_t)125)));
 		G_B6_1 = G_B5_0;
 	}
 
-IL_0034:
+IL_002e:
 	{
 		NullCheck(G_B6_1);
 		G_B6_1->___U3CiU3E5__2_4 = G_B6_0;
-		goto IL_0078;
+		goto IL_0072;
 	}
 
-IL_003b:
+IL_0035:
 	{
 		// text.text= i.ToString();
 		TMP_Text_tE8D677872D43AD4B2AAF0D6101692A17D0B251A9* L_5 = __this->___text_3;
@@ -17713,7 +17713,7 @@ IL_003b:
 		return (bool)1;
 	}
 
-IL_0061:
+IL_005b:
 	{
 		__this->___U3CU3E1__state_0 = (-1);
 		// i++;
@@ -17723,14 +17723,14 @@ IL_0061:
 		__this->___U3CiU3E5__2_4 = ((int32_t)il2cpp_codegen_add(L_9, 1));
 	}
 
-IL_0078:
+IL_0072:
 	{
 		// while(i<=value)
 		int32_t L_10 = __this->___U3CiU3E5__2_4;
 		int32_t L_11 = __this->___value_2;
 		if ((((int32_t)L_10) <= ((int32_t)L_11)))
 		{
-			goto IL_003b;
+			goto IL_0035;
 		}
 	}
 	{
@@ -19720,7 +19720,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PlayerAction__ctor_mB5F86BCF3ABB82CFE689
 	{
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral687D9BA523E32A2B8A4FEAD5E5EAE89D357E1420);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral70253F929BCE7F81DF1A5A1C0900BED744E86C9C);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralA82D62EE8075FBAE46CC278680965FF1AB1AE0D5);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral85F80FAAA415BD1B83857D4D496807832BC453B3);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralCAF8804297181FF007CA835529DD4477CFD94A70);
 		s_Il2CppMethodInitialized = true;
 	}
@@ -19804,7 +19804,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PlayerAction__ctor_mB5F86BCF3ABB82CFE689
 		//     ""controlSchemes"": []
 		// }");
 		InputActionAsset_tF217AC5223B4AAA46EBCB44B33E9259FB117417D* L_0;
-		L_0 = InputActionAsset_FromJson_m8F7212EB013EF4D853836228D393C0D15BD0433C(_stringLiteralA82D62EE8075FBAE46CC278680965FF1AB1AE0D5, NULL);
+		L_0 = InputActionAsset_FromJson_m8F7212EB013EF4D853836228D393C0D15BD0433C(_stringLiteral85F80FAAA415BD1B83857D4D496807832BC453B3, NULL);
 		__this->___U3CassetU3Ek__BackingField_0 = L_0;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CassetU3Ek__BackingField_0), (void*)L_0);
 		// m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
