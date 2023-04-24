@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
+
 public class MenuManager : MonoBehaviour
 {
     public AudioSource audioSource;
@@ -13,6 +15,7 @@ public class MenuManager : MonoBehaviour
     public Button []PlayerOptions;
     public GameObject AdPanel;
     public GameObject RewardPanel;
+    public GameObject FullPanel;
    
     public Sprite SoundSprite;
     public Sprite BGMusicSprite;
@@ -20,10 +23,20 @@ public class MenuManager : MonoBehaviour
     public Sprite UnSelectedSprite;
     public Sprite OffSound;
 
+    public Sprite ZeroStarSprite;
+    public Sprite OneStarSprite;
+    public Sprite TwoStarSprite;
+    public Sprite ThreeStarSprite;
+
+    public Image[] PowerUPsStarImages;
+   
+
+
     public static MenuManager Instance;
     public TMP_Text highScore;
     public TMP_Text TotalCoins;
-    public TMP_Text AvilabeCoins;
+    public TMP_Text AvilableCoinsInStore;
+    public TMP_Text AvilableCoinsInPowerUps;
     private int CoinCheat;
 
     private void Awake()
@@ -33,10 +46,12 @@ public class MenuManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
         UpdateSprite();
+        UpdateStarSprite();
         highScore.text = PlayerPrefs.GetString("HighScore", "000000");
         TotalCoins.text = PlayerPrefs.GetString("Coins", "000000");
         CoinCheat = PlayerPrefs.GetInt("Cheat", 0);
-        AvilabeCoins.text = TotalCoins.text;
+        AvilableCoinsInStore.text = TotalCoins.text;
+        AvilableCoinsInPowerUps.text= TotalCoins.text;
         PlayerPrefs.SetString("Button" + 0, "Active");
         
 
@@ -227,8 +242,8 @@ public class MenuManager : MonoBehaviour
             coins -= price;
             PlayerPrefs.SetString("Coins", coins.ToString());
             TotalCoins.text = coins.ToString();
-            AvilabeCoins.text= coins.ToString();
-
+            AvilableCoinsInStore.text= coins.ToString();
+            AvilableCoinsInPowerUps.text= coins.ToString();
             return true; 
 
         }
@@ -240,6 +255,115 @@ public class MenuManager : MonoBehaviour
                
     }
 
+    public void SelectPowerUp(int itemIndex)
+    {
+        if(PlayerPrefs.GetString("PowerUp" + itemIndex, "Boostable")!="Full")
+        {
+            if (BoostPowerUP(itemIndex))
+            {
+                UpdateStarCount(itemIndex);
+
+            }
+            else
+            {
+                AdPanel.SetActive(true);
+            }
+
+        }
+        else
+        {
+            FullPanel.SetActive(true); 
+        }
+    }
+
+    private void UpdateStarSprite()
+    {
+       
+
+        for (int i = 0; i < PowerUPsStarImages.Length; i++)
+        {
+            int starCount = PlayerPrefs.GetInt("Item" + i + "StarCount", 0);
+
+            switch (starCount)
+            {
+                case 0:
+                    PowerUPsStarImages[i].sprite = ZeroStarSprite; break;
+
+                case 1:
+                    PowerUPsStarImages[i].sprite = OneStarSprite; break;
+
+                case 2:
+                    PowerUPsStarImages[i].sprite = TwoStarSprite; break;
+
+                case 3:
+                    PowerUPsStarImages[i].sprite = ThreeStarSprite; break;
+
+                default: break;
+
+
+            }
+        }
+        
+    }
+
+    private void UpdateStarCount(int itemIndex)
+    {
+       int starCount = PlayerPrefs.GetInt("Item" + itemIndex + "StarCount", 0);
+        
+       if(starCount<3)
+       {
+            starCount++;
+            PlayerPrefs.SetInt("Item" + itemIndex + "StarCount", starCount);
+            UpdateStarSprite();
+
+            if(starCount==3)
+            {
+                PlayerPrefs.SetString("PowerUp" + itemIndex,"Full");
+            }
+        }
+       
+
+   
+    }
+
+    private bool BoostPowerUP(int powerUpIndex)
+    {
+        int price;
+        int coins = int.Parse(PlayerPrefs.GetString("Coins", "0"));
+
+        switch (powerUpIndex)
+        {
+   
+            case 0: price = 1000; break;
+
+            case 1: price = 3000; break;
+
+            case 2: price = 5000; break;
+
+            case 3: price = 10000;break;
+
+            default: price = 0; break;
+
+        }
+
+        if (coins >= price)
+        {
+            coins -= price;
+            PlayerPrefs.SetString("Coins", coins.ToString());
+            TotalCoins.text = coins.ToString();
+            AvilableCoinsInStore.text = coins.ToString();
+            AvilableCoinsInPowerUps.text = coins.ToString();
+
+            return true;
+
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
     {
 
@@ -248,7 +372,8 @@ public class MenuManager : MonoBehaviour
 
         PlayerPrefs.SetString("Coins", string.Format("{0:D6}", coinsTotal));
         TotalCoins.text = coinsTotal.ToString();
-        AvilabeCoins.text = coinsTotal.ToString();
+        AvilableCoinsInStore.text = coinsTotal.ToString();
+        AvilableCoinsInPowerUps.text=coinsTotal.ToString();
         RewardPanel.SetActive(true);
     }
 

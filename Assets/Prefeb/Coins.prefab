@@ -26,6 +26,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8939798232403801284}
   - {fileID: 8444080064281481625}
@@ -137,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666512080502715807, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Coin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
@@ -243,7 +244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666512080502715807, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Coin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
@@ -349,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666512080502715807, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Coin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
@@ -455,7 +456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666512080502715807, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Coin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
@@ -561,7 +562,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666512080502715807, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Coin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8d6f6cfc27dd4346b78dd2233c31a24, type: 3}

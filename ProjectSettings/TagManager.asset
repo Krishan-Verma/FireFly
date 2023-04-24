@@ -8,6 +8,7 @@ TagManager:
   - Dead
   - Coins
   - Live
+  - Coin
   layers:
   - Default
   - TransparentFX

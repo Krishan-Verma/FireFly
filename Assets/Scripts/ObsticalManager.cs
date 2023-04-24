@@ -9,7 +9,7 @@ public class ObsticalManager : MonoBehaviour
     public AudioClip hitsound;
 
     public static ObsticalManager Instance;
-    int minimumLive = 1;
+    int minimumLive = 0;
 
     private void Awake()
     {
@@ -18,8 +18,6 @@ public class ObsticalManager : MonoBehaviour
 
 
     }
-
-
 
     void DisablePlayer(PlayerManager player)
     {
@@ -37,7 +35,7 @@ public class ObsticalManager : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (collision.gameObject.CompareTag("Player") && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()))
+        if (collision.gameObject.CompareTag("Player") && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()) && !GameManager.Instance.GodMode)
         {
 
             if (GameManager.Instance.live > minimumLive)
@@ -59,7 +57,7 @@ public class ObsticalManager : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
 
-        if (collision.gameObject.CompareTag("Player") && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()))
+        if (collision.gameObject.CompareTag("Player") && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()) && !GameManager.Instance.GodMode)
         {
 
 
@@ -84,7 +82,7 @@ public class ObsticalManager : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        if (collision.gameObject.CompareTag("Player") && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>()))
+        if (collision.gameObject.CompareTag("Player") && !GameManager.Instance.Invisible(collision.gameObject.GetComponent<PlayerManager>())&& !GameManager.Instance.GodMode)
         {
 
 
@@ -115,20 +113,9 @@ public class ObsticalManager : MonoBehaviour
 
     void DecreaseLive(RectTransform playerPosition)
     {
-
-        if (!GameManager.Instance.GodMode)
-        {
-            GameManager.Instance.live -= 1;
-            audioSource.PlayOneShot(hitsound);
-            GameManager.Instance.lives[GameManager.Instance.live].SetActive(false);
-
-        }
-        else
-        {
-          
-            GameManager.Instance.ObsticalSpawnTime = (GameManager.Instance.ObsticalSpawnTime > 1) ? GameManager.Instance.ObsticalSpawnTime - 1f : 1f;
-        }
-
+        GameManager.Instance.live -= 1;
+        audioSource.PlayOneShot(hitsound);
+        GameManager.Instance.lives[GameManager.Instance.live].SetActive(false);
         playerPosition.position = new Vector3(playerPosition.position.x, Screen.height / 2f, 0f);
 
     }

@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
     public GameObject []lives;
     public GameObject [] Enemies;
     public GameObject newlive;
+    public GameObject magnet;
+    public GameObject sheild;
+    public GameObject score2x;
+    public GameObject coin2x;
     public GameObject SpawnPos;
     public GameObject SpawnPosFront;
     public GameObject GamePanel;
@@ -24,7 +28,9 @@ public class GameManager : MonoBehaviour
     public GameObject highScoreText;
     public GameObject Coins;
     public GameObject []Players;
-    
+    public GameObject score2xSlider;
+    public GameObject coin2xSlider;
+    public GameObject MagnetSlider;
 
     public TMP_Text score;
     public TMP_Text finalScore;
@@ -57,13 +63,13 @@ public class GameManager : MonoBehaviour
     public int coinCount = 0;
     int index = 0;
 
-
+    public int scoreIncrement=1;
+    public int coinIncrement = 1;
     public float speed = -200;
-    public float ObsticalSpawnTime=4f;
     public bool GodMode = false;
     public bool IsDead = false;
     private bool Spawning=true;
-
+    
     private void Awake()
     {
         
@@ -97,13 +103,11 @@ public class GameManager : MonoBehaviour
     {
         Music();
 
-        StartCoroutine(Spawner(nameof(GenerateObstical), 1f, ObsticalSpawnTime));
+        StartCoroutine(Spawner(nameof(GenerateObstical), 1f,4f));
         StartCoroutine(Spawner(nameof(GenerateEnemies), 100f, 200f));
-        StartCoroutine(Spawner(nameof(GenerateCoins), 1f, 3f));
+        StartCoroutine(Spawner(nameof(GenerateCoins), 1f, 5f));
         StartCoroutine(Spawner(nameof(GenerateExtras), 0f, 1f));
-        StartCoroutine(Spawner(nameof(GenerateNewLife), 50f, 50f)); 
-
-
+        StartCoroutine(Spawner(nameof(GenerateRandomPowerUps),10f,20f));
     }
 
     private void Update()
@@ -117,15 +121,35 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         if (!IsDead)
-            scoreCount += 1;
+            scoreCount += scoreIncrement;
 
 
         if (scoreCount % delay == 0 && scoreCount / delay > count)
         {
             count++;
             speed += velocity;
-            ObsticalSpawnTime -= 0.001f;
+  
         }
+
+        if(score2xSlider.GetComponent<Slider>().value>0) {
+            
+            score2xSlider.GetComponent<Slider>().value -=Time.deltaTime;
+        }
+
+        if (coin2xSlider.GetComponent<Slider>().value > 0)
+        {
+
+            coin2xSlider.GetComponent<Slider>().value -= Time.deltaTime;
+        }
+
+        if (MagnetSlider.GetComponent<Slider>().value > 0)
+        {
+
+            MagnetSlider.GetComponent<Slider>().value -= Time.deltaTime;
+        }
+        
+
+
     }
 
     void GenerateObstical()
@@ -155,17 +179,56 @@ public class GameManager : MonoBehaviour
        Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 8f, 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
      
     }
+    void GenerateCoins()
+    {
+        Instantiate(Coins, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform);
+
+    }
 
     void GenerateNewLife()
     {
         Instantiate(newlive, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
 
+    } 
+    void GenerateMagnet()
+    {
+        Instantiate(magnet, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+
+    }
+    void GenerateSheild()
+    {
+        Instantiate(sheild, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+
     }
 
-    void GenerateCoins()
-    {
-        Instantiate(Coins, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform);
+   
 
+    void GenerateScore2x()
+    {
+        Instantiate(score2x, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+
+    }
+
+    void GenerateCoin2x()
+    {
+        Instantiate(coin2x, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+
+    }
+
+    private void GenerateRandomPowerUps()
+    {
+        int randInt = Random.Range(0, 5); 
+
+        switch(randInt)
+        {
+            case 0: GenerateScore2x(); break;
+            case 1: GenerateCoin2x(); break;
+            case 2: GenerateMagnet(); break;
+            case 3: GenerateSheild(); break;
+            case 4: GenerateNewLife(); break;
+
+
+        }
     }
     public void Restart()
     {
@@ -315,7 +378,7 @@ public class GameManager : MonoBehaviour
        audioMixer.GetFloat("MasterVolume", out float vol);
        if(vol==10f)
         {
-            audioMixer.SetFloat("MasterVolume", -80f);
+            audioMixer.SetFloat("MasterVolume", -60f);
             soundBtn.image.sprite = offSound;
 
         }
@@ -386,5 +449,27 @@ public class GameManager : MonoBehaviour
         Spawning = false;
         StopAllCoroutines();
     }
+
+
+    public float UpdatePowerUpsDuration(int powerUpIndex)
+    {
+      int starCount = PlayerPrefs.GetInt("Item" + powerUpIndex + "StarCount", 0);
+      float duration;
+
+      switch(starCount)
+      {
+            case 0: duration = 10f; break;
+            case 1: duration = 15f; break;
+            case 2: duration = 20f; break;
+            case 3: duration = 25f; break;
+
+            default: duration = 10f; break;
+      }
+
+     return duration;
+
+    }
+
+
 }
 

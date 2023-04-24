@@ -6,13 +6,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
-    public static Rigidbody2D rb;
-    public float Upforce;
-    public float Downforce;
+    
     PlayerAction playerAction;
+
+    public static Rigidbody2D rb;
     public AudioSource audioSource;
     public Animator animator;
+
+    float Upforce = 175f;
+    float Downforce = -150f;
     float jumprefactor;
+
     private void Awake()
     {
         jumprefactor = Screen.width / Screen.height;

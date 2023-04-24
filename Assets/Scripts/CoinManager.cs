@@ -21,7 +21,7 @@ public class CoinManager : MonoBehaviour
         if(collision.gameObject.tag=="Player")
         {
             audioSource.PlayOneShot(coinSound);
-            GameManager.Instance.coinCount ++;
+            GameManager.Instance.coinCount +=GameManager.Instance.coinIncrement;
             Destroy(gameObject,0.4f);
         }
     }
