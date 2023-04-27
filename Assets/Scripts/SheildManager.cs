@@ -27,7 +27,10 @@ public class SheildManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.GodMode = false;
+        if (GameManager.Instance.activePlayerIndex!=4)
+        { GameManager.Instance.GodMode = false; 
+        }
+
 
     }
 }

@@ -45,7 +45,10 @@ public class Score2x : MonoBehaviour
     
     private void OnDestroy()
     {
-        GameManager.Instance.scoreIncrement = 1;
+        if (GameManager.Instance.activePlayerIndex != 1)
+        {
+            GameManager.Instance.scoreIncrement = 1;
+        }
         scoreSlider.gameObject.SetActive(false);
      
     }

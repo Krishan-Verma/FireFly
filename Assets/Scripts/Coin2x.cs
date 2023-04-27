@@ -42,7 +42,10 @@ public class Coin2x : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.coinIncrement = 1;
+        if (GameManager.Instance.activePlayerIndex != 2)
+        {
+            GameManager.Instance.coinIncrement = 1;
+        }
         coinSlider.gameObject.SetActive(false);
     }
 }

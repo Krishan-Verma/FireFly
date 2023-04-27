@@ -188,6 +188,10 @@ public class MenuManager : MonoBehaviour
 
                 PlayerPrefs.SetString("Button" + i, "Active");
             }
+            else
+            {
+                AdPanel.SetActive(true);
+            }
         }
     }
 
@@ -204,8 +208,11 @@ public class MenuManager : MonoBehaviour
 
         PlayerOptions[i].image.sprite = SelectedSprite;
         PlayerPrefs.SetInt("PlayerNo", i);
+       
+
     }
 
+  
 
     private bool MakePayment(int playerIndex)
     {
@@ -249,7 +256,7 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            AdPanel.SetActive(true);
+          
             return false;
         }
                

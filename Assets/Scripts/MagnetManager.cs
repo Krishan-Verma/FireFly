@@ -13,7 +13,7 @@ public class MagnetManager : MonoBehaviour
     GameObject[] activeCoin;
     Slider magnetSlider;
 
-    bool magnetEnabled = false;
+    
     float magnetDuration = 10f;
     float speed = 2f;
     int magnetIndex = 2;
@@ -28,14 +28,14 @@ public class MagnetManager : MonoBehaviour
 
     private void Update()
     {
-        if(magnetEnabled)
+        if(GameManager.Instance.magnetEnabled)
         {
             activeCoin = GameObject.FindGameObjectsWithTag("Coin");
             foreach (GameObject coin in activeCoin)
             {
                 coin.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                Vector2 direction = (player.GetComponent<RectTransform>().position-coin.GetComponent<RectTransform>().position).normalized;
-                float distance = Vector2.Distance(player.GetComponent<RectTransform>().position, coin.GetComponent<RectTransform>().position);
+                Vector2 direction = (GameManager.Instance.PlayerObj.GetComponent<RectTransform>().position-coin.GetComponent<RectTransform>().position).normalized;
+                float distance = Vector2.Distance(GameManager.Instance.PlayerObj.GetComponent<RectTransform>().position, coin.GetComponent<RectTransform>().position);
                 coin.GetComponent<RectTransform>().Translate(distance * speed * Time.deltaTime * direction);
             }
         }
@@ -49,7 +49,7 @@ public class MagnetManager : MonoBehaviour
            
             player = collision.gameObject;
             GameManager.Instance.audioSource.PlayOneShot(MagnetGain);
-            magnetEnabled = true;
+            GameManager.Instance.magnetEnabled = true;
             magnetSlider.gameObject.SetActive(true);
             magnetSlider.GetComponent<RectTransform>().sizeDelta = new Vector2((magnetDuration * 10f) + 100f, magnetSlider.GetComponent<RectTransform>().sizeDelta.y);
             magnetSlider.value = magnetDuration;
@@ -63,7 +63,12 @@ public class MagnetManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        magnetEnabled=false;
+        if(GameManager.Instance.activePlayerIndex!=3)
+        {
+            GameManager.Instance.magnetEnabled = false;
+            
+        }
+        
 
         if (activeCoin!= null && activeCoin.Length > 0)
         {

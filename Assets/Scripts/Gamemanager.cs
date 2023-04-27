@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     public GameObject score2xSlider;
     public GameObject coin2xSlider;
     public GameObject MagnetSlider;
-
+    public GameObject PlayerObj;
     public TMP_Text score;
     public TMP_Text finalScore;
     public TMP_Text coinCountText;
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     public AudioClip gameOverClip;
     public AudioClip scoreClip;
     public AudioClip highScoreClip;
+    public AudioClip PlayerChange;
 
     public Button soundBtn;
     public Sprite soundSprite;
@@ -69,29 +70,79 @@ public class GameManager : MonoBehaviour
     public bool GodMode = false;
     public bool IsDead = false;
     private bool Spawning=true;
-    
+    public bool magnetEnabled = false;
+    public int activePlayerIndex;
+    GameObject gameObject1;
+
+    Vector2 PowerUpPos;
+
     private void Awake()
     {
-        
-        Instantiate(Players[PlayerPrefs.GetInt("PlayerNo", 0)], SpawnPos.transform, false);
+        PowerUpPos=new Vector2(-365f,345f);
+        PlayerObj=Instantiate(Players[PlayerPrefs.GetInt("PlayerNo", 0)], SpawnPos.transform, false);
         speed *= (Screen.width / Screen.height);
         velocity = speed/10;
         scoreCount = 0;
         Instance = this;
         audioSource = GetComponent<AudioSource>();
         invisiblityTime = 3f;
-
+        AddPlayerAbility(PlayerPrefs.GetInt("PlayerNo", 0));
 
     }
 
     private void OnEnable()
     {
+
         IronSourceRewardedVideoEvents.onAdRewardedEvent += PlayerRevive;
         
 
     }
 
-  
+    public void AddPlayerAbility(int i)
+    {   
+        activePlayerIndex= i;
+        
+        if(gameObject1!=null)
+        {   
+            Destroy(gameObject1);
+        }
+
+        switch (i)
+        {
+            case 0: break;
+
+            case 1: 
+                    scoreIncrement = 2;
+                    gameObject1 = Instantiate(score2x, SpawnPos.transform);
+                    gameObject1.GetComponent<RectTransform>().localPosition= PowerUpPos;
+                    break;
+
+            case 2:
+                    coinIncrement = 2;
+                    gameObject1 = Instantiate(coin2x, SpawnPos.transform);
+                    gameObject1.GetComponent<RectTransform>().localPosition = PowerUpPos;
+                    break;
+
+            case 3: magnetEnabled = true;
+                    gameObject1 = Instantiate(magnet, SpawnPos.transform);
+                    gameObject1.GetComponent<RectTransform>().localPosition = PowerUpPos;
+                    break;
+            
+            case 4: GodMode = true;
+                    gameObject1 = Instantiate(sheild, SpawnPos.transform);
+                    gameObject1.GetComponent<Collider2D>().enabled = false;
+                    gameObject1.transform.SetParent(PlayerObj.transform, false);
+                    gameObject1.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
+                    gameObject1.GetComponent<Rigidbody2D>().isKinematic = true;
+                    break;
+
+
+            default: break;
+
+        }
+    }
+
+
 
     private void OnDisable()
     {
@@ -107,7 +158,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(Spawner(nameof(GenerateEnemies), 100f, 200f));
         StartCoroutine(Spawner(nameof(GenerateCoins), 1f, 5f));
         StartCoroutine(Spawner(nameof(GenerateExtras), 0f, 1f));
-        StartCoroutine(Spawner(nameof(GenerateRandomPowerUps),10f,20f));
+        StartCoroutine(Spawner(nameof(GenerateRandomPowerUps),10f,35f));
     }
 
     private void Update()
@@ -116,6 +167,8 @@ public class GameManager : MonoBehaviour
         score.text = scoreCount.ToString();
         coinCountText.text = coinCount.ToString();
 
+        if (scoreCount > 100000)
+        { SceneManager.LoadScene(2); }
     }
 
     private void FixedUpdate()
@@ -265,6 +318,7 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         StopSpawning();
+        EndPowerUpSliders();
         UpdateCoins();
         UpdateFinalScore();
         Invoke(nameof(HighScore), 4f);
@@ -470,6 +524,13 @@ public class GameManager : MonoBehaviour
 
     }
 
+    void EndPowerUpSliders()
+    {
+        coin2xSlider.SetActive(false);
+        score2xSlider.SetActive(false);
+        MagnetSlider.SetActive(false);
+        
+    }
 
 }
 
