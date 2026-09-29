@@ -49,7 +49,7 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         
-      rb.velocity += new Vector2(0f, Downforce*Time.deltaTime*jumprefactor);
+      rb.linearVelocity += new Vector2(0f, Downforce*Time.deltaTime*jumprefactor);
         
 
     }

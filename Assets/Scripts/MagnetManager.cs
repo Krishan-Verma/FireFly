@@ -33,7 +33,7 @@ public class MagnetManager : MonoBehaviour
             activeCoin = GameObject.FindGameObjectsWithTag("Coin");
             foreach (GameObject coin in activeCoin)
             {
-                coin.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                coin.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
                 Vector2 direction = (GameManager.Instance.PlayerObj.GetComponent<RectTransform>().position-coin.GetComponent<RectTransform>().position).normalized;
                 float distance = Vector2.Distance(GameManager.Instance.PlayerObj.GetComponent<RectTransform>().position, coin.GetComponent<RectTransform>().position);
                 coin.GetComponent<RectTransform>().Translate(distance * speed * Time.deltaTime * direction);

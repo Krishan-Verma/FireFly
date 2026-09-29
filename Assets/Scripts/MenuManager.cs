@@ -59,13 +59,13 @@ public class MenuManager : MonoBehaviour
 
     private void OnEnable()
     {
-        IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
+        ISScript.OnAdRewarded += RewardedVideoOnAdRewardedEvent;
 
     }
 
     private void OnDisable()
     {
-        IronSourceRewardedVideoEvents.onAdRewardedEvent -= RewardedVideoOnAdRewardedEvent;
+        ISScript.OnAdRewarded -= RewardedVideoOnAdRewardedEvent;
 
     }
 
@@ -371,7 +371,7 @@ public class MenuManager : MonoBehaviour
 
     }
 
-    void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
+    void RewardedVideoOnAdRewardedEvent()
     {
 
         int rewardCoins = 1000;

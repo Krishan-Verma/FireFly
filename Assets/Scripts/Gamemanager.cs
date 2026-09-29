@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
 
-        IronSourceRewardedVideoEvents.onAdRewardedEvent += PlayerRevive;
+        ISScript.OnAdRewarded += PlayerRevive;
         
 
     }
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
                     gameObject1.GetComponent<Collider2D>().enabled = false;
                     gameObject1.transform.SetParent(PlayerObj.transform, false);
                     gameObject1.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
-                    gameObject1.GetComponent<Rigidbody2D>().isKinematic = true;
+                    gameObject1.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
                     break;
 
 
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        IronSourceRewardedVideoEvents.onAdRewardedEvent -= PlayerRevive;
+        ISScript.OnAdRewarded -= PlayerRevive;
         
     }
 
@@ -209,13 +209,13 @@ public class GameManager : MonoBehaviour
     {
         int randIndex = Random.Range(0, Obsticals.Length);
         float obsHeight = (randIndex < 9) ? Screen.height / 6f : Screen.height/1.5f;
-        Instantiate(Obsticals[randIndex], new Vector3(Screen.width, obsHeight, 0f), Obsticals[randIndex].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+        Instantiate(Obsticals[randIndex], new Vector3(Screen.width, obsHeight, 0f), Obsticals[randIndex].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed, 0f);
        
     }
     void GenerateEnemies()
     {
         float obsHeight = Screen.height / 1.5f;
-        Instantiate(Enemies[index], new Vector3(Screen.width, obsHeight, 0f), Enemies[index].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+        Instantiate(Enemies[index], new Vector3(Screen.width, obsHeight, 0f), Enemies[index].transform.rotation, SpawnPos.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed, 0f);
         index++;
 
         if (index % Enemies.Length == 0)
@@ -229,7 +229,7 @@ public class GameManager : MonoBehaviour
     void GenerateExtras()
     {
        int randIndex = Random.Range(0, extras.Length);
-       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 8f, 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0f);
+       Instantiate(extras[randIndex], new Vector3(Screen.width-50f, Screen.height / 8f, 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed, 0f);
      
     }
     void GenerateCoins()
@@ -240,17 +240,17 @@ public class GameManager : MonoBehaviour
 
     void GenerateNewLife()
     {
-        Instantiate(newlive, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+        Instantiate(newlive, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed * 0.5f, 0f);
 
     } 
     void GenerateMagnet()
     {
-        Instantiate(magnet, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+        Instantiate(magnet, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed * 0.5f, 0f);
 
     }
     void GenerateSheild()
     {
-        Instantiate(sheild, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+        Instantiate(sheild, new Vector3(Random.Range(Screen.width / 1.5f, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPos.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed * 0.5f, 0f);
 
     }
 
@@ -258,13 +258,13 @@ public class GameManager : MonoBehaviour
 
     void GenerateScore2x()
     {
-        Instantiate(score2x, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+        Instantiate(score2x, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed * 0.5f, 0f);
 
     }
 
     void GenerateCoin2x()
     {
-        Instantiate(coin2x, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().velocity = new Vector2(speed * 0.5f, 0f);
+        Instantiate(coin2x, new Vector3(Random.Range(Screen.width / 2, Screen.width), Random.Range(Screen.height / 4f, Screen.height / 1.5f), 0f), Quaternion.identity, SpawnPosFront.transform).GetComponent<Rigidbody2D>().linearVelocity = new Vector2(speed * 0.5f, 0f);
 
     }
 
@@ -444,19 +444,14 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void PlayerRevive(IronSourcePlacement arg1, IronSourceAdInfo arg2)
+    private void PlayerRevive()
     {
         Invisible(player);
         player.transform.position = new Vector3(player.transform.position.x, Screen.height / 2f, 0f);
         Time.timeScale = 1;
-       
+
     }
 
-
-    private void RewardedVideoOnAdShowFailedEvent(IronSourceError arg1, IronSourceAdInfo arg2)
-    {
-        ObsticalManager.Instance.End(player);
-    }
 
     private void RewardedVideoOnAdUnavailable()
     {

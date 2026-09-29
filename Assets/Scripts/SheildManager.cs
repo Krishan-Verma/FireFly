@@ -18,7 +18,7 @@ public class SheildManager : MonoBehaviour
         {
             GameManager.Instance.GodMode = true;
             GameManager.Instance.audioSource.PlayOneShot(SheildGain);
-            gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+            gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
             gameObject.transform.SetParent(collision.transform,false);
             gameObject.GetComponent<RectTransform>().position=collision.gameObject.GetComponent<RectTransform>().position;
             Destroy(gameObject, sheildDuration);

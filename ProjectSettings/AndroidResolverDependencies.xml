@@ -1,12 +1,9 @@
 <dependencies>
   <packages>
-    <package>com.google.android.gms:play-services-ads-identifier:18.0.1</package>
-    <package>com.google.android.gms:play-services-basement:18.1.0</package>
-    <package>com.ironsource.adapters:unityadsadapter:4.3.27</package>
-    <package>com.ironsource.sdk:mediationsdk:7.3.0.1</package>
-    <package>com.unity3d.ads:unity-ads:4.6.1</package>
-    <package>com.unity3d.mediation:mediation-sdk:[1.0,2.0[</package>
-    <package>com.unity3d.mediation:unityads-adapter:[1.0,2.0[</package>
+    <package>com.google.android.gms:play-services-ads-identifier:18.1.0</package>
+    <package>com.unity3d.ads:unity-ads:4.20.1</package>
+    <package>com.unity3d.ads-mediation:mediation-sdk:9.6.0</package>
+    <package>com.unity3d.ads-mediation:unityads-adapter:5.13.0</package>
   </packages>
   <files />
   <settings>
@@ -14,12 +11,16 @@
     <setting name="bundleId" value="com.GamesKStar.FireFly" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
+    <setting name="gradlePropertiesTemplateEnabled" value="False" />
     <setting name="gradleTemplateEnabled" value="True" />
     <setting name="installAndroidPackages" value="True" />
+    <setting name="localMavenRepoDir" value="Assets/GeneratedLocalRepo" />
     <setting name="packageDir" value="Assets/Plugins/Android" />
     <setting name="patchAndroidManifest" value="True" />
     <setting name="patchMainTemplateGradle" value="True" />
     <setting name="projectExportEnabled" value="False" />
-    <setting name="useJetifier" value="True" />
+    <setting name="useFullCustomMavenRepoPathWhenExport" value="True" />
+    <setting name="useFullCustomMavenRepoPathWhenNotExport" value="False" />
+    <setting name="useJetifier" value="False" />
   </settings>
 </dependencies>
