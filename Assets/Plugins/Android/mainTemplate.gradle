@@ -11,6 +11,8 @@ dependencies {
     implementation 'com.unity3d.ads-mediation:mediation-sdk:9.6.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
     implementation 'com.unity3d.ads-mediation:unityads-adapter:5.13.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
 // Android Resolver Dependencies End
+    // Play Services still pulls in androidx.fragment 1.1.0, which Google Play flags as outdated.
+    implementation 'androidx.fragment:fragment:1.9.1'
 **DEPS**}
 
 // Android Resolver Exclusions Start
